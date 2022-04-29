@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>COVID19 in US</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.5.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.5.0/mapbox-gl.js"></script>
+    <style>
+    </style>
+</head> 
+
+<body>
+    <div id="map"></div>
+
+        <h2>COVID19 rates in US</h2>
+        <div id='text-description'>
+            <p>Hover over a state!</p>
+        </div>
+    </div>
+ 
+    <script>
+        mapboxgl.accessToken = 
+            'pk.eyJ1IjoiamFrb2J6aGFvIiwiYSI6ImNpcms2YWsyMzAwMmtmbG5icTFxZ3ZkdncifQ.P9MBej1xacybKcDN_jehvw';
+        const map = new mapboxgl.Map({
+        container: 'map', // container ID
+        style: 'mapbox://styles/mapbox/dark-v10', // style URL
+        zoom: 3, // starting zoom
+        center: [-100, 40] // starting center
+    }
+);  
+
+map.on('load', () => {
+    map.addSource('CovidRates', {
+        type: 'geojson',
+        data: 'assets/us-covid-2020-rates.geojson'
+    });
+
+    map.addLayer({
+        'id': 'CovidRates-layer',
+        'type': 'fill',
+    'source': 'assets/us-covid-2020-rates.geojson',
+    'paint': {
+        'fill-color': [
+            'step',
+            ['get', 'density'],
+            '#FFEDA0',   // stop_output_0
+            10,          // stop_input_0
+            '#FED976',   // stop_output_1
+            20,          // stop_input_1
+            '#FEB24C',   // stop_output_2
+            50,          // stop_input_2
+            '#FD8D3C',   // stop_output_3
+            100,         // stop_input_3
+            '#FC4E2A',   // stop_output_4
+            200,         // stop_input_4
+            '#E31A1C',   // stop_output_5
+            500,         // stop_input_5
+            '#BD0026',   // stop_output_6
+            1000,        // stop_input_6
+            "#800026"    // stop_output_7
+        ],
+        'fill-outline-color': '#BBBBBB',
+        'fill-opacity': 0.7,
+    }
+});
+    });
+    </script>
+
+</body>
+
+</html>

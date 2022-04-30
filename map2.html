@@ -146,16 +146,17 @@
 
 
             // click on tree to view magnitude in a popup
-            map.on('click', 'earthquakes-point', (event) => {
-                new mapboxgl.Popup()
-                    .setLngLat(event.features[0].geometry.coordinates)
-                    .setHTML(`<strong>cases:</strong> ${event.features[0].properties.cases}
-                    <br></br>
-                    <strong>County:</strong> ${event.features[0].properties.county}`)
-                    .addTo(map);
-            });
-
+            map.on("click", "covid-point", (event) => {
+          new mapboxgl.Popup()
+            .setLngLat(event.features[0].geometry.coordinates)
+            .setHTML(
+              `<strong>COVID19 Cases:</strong> ${event.features[0].properties.cases}
+              <br></br>
+              <strong>Location:</strong> ${event.features[0].properties.county}, ${event.features[0].properties.state}`
+            )
+            .addTo(map);
         });
+      });
 
 
         // create legend

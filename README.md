@@ -1,4 +1,4 @@
-# Covid-19 cases and rates in the US 
+# Covid-19 Cases and Rates in the US 
 
 ## Introduction
 To better visualize the Covid-19 pandemic in the US, we use a choropleth map to show the Covid-19 rates and a proportional symbol map for the Covid-19 cases in each county during 2020. 

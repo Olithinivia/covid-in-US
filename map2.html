@@ -26,7 +26,7 @@
             position: absolute;
             bottom: 0;
             right: 0;
-            width: 110px;
+            width: 150px;
             background: #fff;
             margin-right: 20px;
             margin-bottom: 40px;
@@ -69,37 +69,42 @@
 <body>
     <div id="map"></div>
     <div id="legend"></div>
+    <div id="title">COVID19 cases in the US</div>
+    <div id="subtitle">by Olivia Mao</div>
     <script>
         mapboxgl.accessToken =
             'pk.eyJ1IjoiamFrb2J6aGFvIiwiYSI6ImNpcms2YWsyMzAwMmtmbG5icTFxZ3ZkdncifQ.P9MBej1xacybKcDN_jehvw';
         let map = new mapboxgl.Map({
             container: 'map', // container ID
             style: 'mapbox://styles/mapbox/dark-v10',
-            projection: 'albers',
             zoom: 3.5, // starting zoom
             center: [-97, 37] // starting center
         });
 
-        const grades = [756412,5000000, 250000],
-            colors = ['rgb(208,209,230)', 'rgb(103,169,207)', 'rgb(1,108,89)']
-            radii = [5, 15, 20];
+        const grades = [1000, 40000, 80000, 120000, 400000],
+            colors = ['rgb(242,240,247)', 'rgb(203,201,226)', 'rgb(158,154,200)', 'rgb(117,107,177)', 'rgb(84,39,143)']
+            radii = [4, 8, 12, 16, 20];
 
-       
-        map.on('load', () => {
-            map.addSource('Covid', {
+        //load data to the map as new layers.
+        //map.on('load', function loadingData() {
+        map.on('load', () => { //simplifying the function statement: arrow with brackets to define a function
+
+            // when loading a geojson, there are two steps
+            // add a source of the data and then add the layer out of the source
+            map.addSource('covid', {
                 type: 'geojson',
                 data: 'assets/us-covid-2020-counts.geojson'
             });
 
             map.addLayer({
-                    'id': 'Covid-layer',
+                    'id': 'covid-point',
                     'type': 'circle',
-                    'source': 'Covid',
-                    'minzoom': 5,
+                    'source': 'covid',
+                    'minzoom': 3.5,
                     'paint': {
                         // increase the radii of the circle as the zoom level and dbh value increases
                         'circle-radius': {
-                            'property': 'mag',
+                            'property': 'cases',
                             'stops': [
                                 [{
                                     zoom: 5,
@@ -112,15 +117,24 @@
                                 [{
                                     zoom: 5,
                                     value: grades[2]
-                                }, radii[2]]
+                                }, radii[2]], 
+                                [{
+                                    zoom: 5,
+                                    value: grades[3]
+                                }, radii[3]], [{
+                                    zoom: 5,
+                                    value: grades[4]
+                                }, radii[4]], 
                             ]
                         },
                         'circle-color': {
-                            'property': 'mag',
+                            'property': 'cases',
                             'stops': [
                                 [grades[0], colors[0]],
                                 [grades[1], colors[1]],
-                                [grades[2], colors[2]]
+                                [grades[2], colors[2]],
+                                [grades[3], colors[3]],
+                                [grades[4], colors[4]]
                             ]
                         },
                         'circle-stroke-color': 'white',
@@ -128,15 +142,16 @@
                         'circle-opacity': 0.6
                     }
                 },
-                'waterway-label'
             );
 
 
             // click on tree to view magnitude in a popup
-            map.on('click', 'C0-point', (event) => {
+            map.on('click', 'earthquakes-point', (event) => {
                 new mapboxgl.Popup()
                     .setLngLat(event.features[0].geometry.coordinates)
-                    .setHTML(`<strong>Magnitude:</strong> ${event.features[0].properties.mag}`)
+                    .setHTML(`<strong>cases:</strong> ${event.features[0].properties.cases}
+                    <br></br>
+                    <strong>County:</strong> ${event.features[0].properties.county}`)
                     .addTo(map);
             });
 
@@ -147,7 +162,7 @@
         const legend = document.getElementById('legend');
 
         //set up legend grades and labels
-        var labels = ['<strong>Covid Cases</strong>'],
+        var labels = ['<strong>Covid19 Cases</strong>'],
             vbreak;
         //iterate through grades and create a scaled circle and label for each
         for (var i = 0; i < grades.length; i++) {

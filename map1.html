@@ -73,7 +73,8 @@ p {
 <body>
     <div id="map"></div>
     <div class='map-overlay' id='features'>
-        <h2>COVID19 rates in US</h2>
+        <h2>COVID19 rates in US by county</h2>
+        <h3>by Olivia Mao</h3>
         <div id='text-description'>
             <p>Hover over a state!</p>
         </div>
@@ -166,7 +167,7 @@ map.on('mousemove', ({point}) => {
     });
     document.getElementById('text-description').innerHTML = state.length ?
         `<h3>${state[0].properties.county + " County, " + state[0].properties.state}</h3><p><strong><em>${state[0].properties.rates}</strong> </em></p>` :
-        `<p>Hover over a county to see the Covid!</p>`;
+        `<p>Hover over a county to see the Covid Rates in different county!</p>`;
     });
 }
     geojsonFetch();        
